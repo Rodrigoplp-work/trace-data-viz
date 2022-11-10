@@ -1,11 +1,14 @@
 <script>
   import { onMount } from 'svelte'
   import * as api from '$lib/api'
+  import TimeGraph from '../components/time-graph.svelte'
+  import LineChart from '../components/line-chart.svelte'
   import StatusButton from '../components/status-button.svelte'
+  import { splitRangeIntoEqualParts } from '../components/utils'
   
   export let data
 
-  let files, file, fileName, experiments
+  let files, file, fileName, experiments, outerZoom
   let xyData, resourcesData, threadData, xyTree, uri, buttonIndex
   let viewXYChart = false
   let viewResourcesChart = false
@@ -84,6 +87,10 @@
           console.log('Data for', name, 'not available')
       }
     }
+  }
+
+const zoomed = e => {
+    outerZoom = e.detail.zoom
   }
 
   // CPU usage chart
@@ -188,6 +195,21 @@
     {/if}
   </div>
 
+  {#if fileName}
+    <div class='space'>
+      {#if viewXYChart && xyTree && xyData}
+        <LineChart {xyData} {xyTree} {uri} on:close={close} on:zoom={zoomed} bind:outerZoom={outerZoom} />
+      {/if}
+
+      {#if viewResourcesChart && resourcesData}
+        <TimeGraph {resourcesData} name='resourcesChart' index={buttonIndex} on:close={close} on:zoom={zoomed} bind:outerZoom={outerZoom} />
+      {/if}
+
+      {#if viewThreadChart && threadData}
+        <TimeGraph resourcesData={threadData} name='threadChart' index={buttonIndex} on:close={close} on:zoom={zoomed} bind:outerZoom={outerZoom} />
+      {/if}
+    </div>
+  {/if}
 </div>
 
 <style>
