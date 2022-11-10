@@ -89,7 +89,27 @@
     }
   }
 
-const zoomed = e => {
+  const close = e => {
+    if (e.detail.chart === 'xyChart') {
+      viewXYChart = false
+      xyData = null
+      xyTree = null
+    }
+    else if (e.detail.chart === 'resourcesChart') {
+      viewResourcesChart = false
+      resourcesData = null
+    }
+    else if (e.detail.chart === 'threadChart') {
+      viewThreadChart = false
+      threadData = null
+    }
+
+    let spot = openExperiments.indexOf(e.detail.index)
+    openExperiments.splice(spot, 1)
+    openExperiments = openExperiments
+  }
+
+  const zoomed = e => {
     outerZoom = e.detail.zoom
   }
 

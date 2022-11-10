@@ -104,7 +104,7 @@
   }
 </script>
 
-{#if data}
+{#if data && data.length > 0}
   <div class='time-graph'>
     <Tree data={treeData} {height} {rowHeight} marginTop={margin.top} />
 

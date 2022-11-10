@@ -18,7 +18,7 @@
 
   let svg, xAxisLineClip, yAxis, xScale, yScale, selected, selectedState, domData, xTranslate
   let maxRange, xTransform, yTransform, box, boxer, gb, dataClone, lineData
-  let startRange, endRange, zooming, lineChart
+  let startRange, endRange, zooming, lineChart, xDomain
   let data = []
 
   $: if (xyData && xyData.model.series.length > 0 && xyTree) {
@@ -27,8 +27,10 @@
       data.push({ xValue: x, yValue: xyData.model.series[0].yValues[i] })
     })
 
+    xDomain = [0, xyData.model.series[0].xValues.length - 1]
+
     xScale = scaleLinear()
-      .domain([+xyData.model.series[0].xValues[0], +xyData.model.series[0].xValues[999]])
+      .domain([+xyData.model.series[0].xValues[xDomain[0]], +xyData.model.series[0].xValues[xDomain[1]]])
       .range([margin.left, width - margin.right])
 
     yScale = scaleLinear()
@@ -89,7 +91,7 @@
   }
 </script>
 
-{#if data}
+{#if data && data.length > 0}
   <div class='chart-box'>
     <svg bind:this={svg} {width} {height}>
       <g class='data'>
